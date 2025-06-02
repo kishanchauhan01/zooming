@@ -11,11 +11,13 @@ WebRTC serves multiple purposes; together with the Media Capture and Streams API
 ---
 
 ## ❄️ ICE (Interactive Connectivity Establishment)
+
 Interactive Connectivity Establishment (ICE) is a framework to allow your web browser to connect with peers. There are many reasons why a straight up connection from Peer A to Peer B won't work. It needs to bypass firewalls that would prevent opening connections, give you a unique address if like most situations your device doesn't have a public IP address, and relay data through a server if your router doesn't allow you to directly connect with peers. ICE uses STUN and/or TURN servers to accomplish this.
 
 ---
 
 ## 🧊 STUN (Session Traversal Utilities for NAT)
+
 Session Traversal Utilities for NAT (STUN) is a protocol to discover your public address and determine any restrictions in your router that would prevent a direct connection with a peer.
 
 The client will send a request to a STUN server on the Internet who will reply with the client's public address and whether or not the client is accessible behind the router's NAT.
@@ -27,6 +29,7 @@ Here peer A is behind a NAT and wants to connect to peer B. Peer A sends a reque
 ---
 
 ## 🌐 NAT (Network Address Translation)
+
 Network Address Translation (NAT) is used to give your device a public IP address. A router will have a public IP address and every device connected to the router will have a private IP address. Requests will be translated from the device's private IP to the router's public IP with a unique port. That way you don't need a unique public IP for each device but can still be discovered on the Internet.
 
 Some routers will have restrictions on who can connect to devices on the network. This can mean that even though we have the public IP address found by the STUN server, not anyone can create a connection. In this situation we need to use `TURN`.
@@ -34,6 +37,7 @@ Some routers will have restrictions on who can connect to devices on the network
 ---
 
 ## 🔁 TURN (Traversal Using Relays around NAT)
+
 Some routers using NAT employ a restriction called 'Symmetric NAT'. This means the router will only accept connections from peers you've previously connected to.
 
 Traversal Using Relays around NAT (TURN) is meant to bypass the Symmetric NAT restriction by opening a connection with a TURN server and relaying all information through that server. You would create a connection with a TURN server and tell all peers to send packets to the server which will then be forwarded to you. This obviously comes with some overhead so it is only used if there are no other alternatives.
@@ -45,17 +49,20 @@ Here peer A is behind a Symmetric NAT and wants to connect to peer B. Peer A sen
 ---
 
 ## 📝 SDP (Session Description Protocol)
+
 Session Description Protocol (SDP) is a standard for describing the multimedia content of the connection such as resolution, formats, codecs, encryption, etc. so that both peers can understand each other once the data is transferring. This is, in essence, the metadata describing the content and not the media content itself.
 
 Technically, then, SDP is not truly a protocol, but a data format used to describe connection that shares media between devices.
 
 **How SDP is used in WebRTC:**  
+
 - When two peers want to establish a WebRTC connection, they exchange SDP messages as part of the offer/answer model.  
 - The "offer" contains information about the media formats and connection parameters supported by the initiating peer.  
 - The "answer" contains the supported formats and parameters from the responding peer.  
 - This negotiation ensures both peers agree on how to send and receive media.
 
 **What SDP describes:**  
+
 - Media types (audio, video, data)
 - Supported codecs (e.g., VP8, H.264 for video; Opus for audio)
 - Network information (IP addresses, ports)
@@ -63,6 +70,7 @@ Technically, then, SDP is not truly a protocol, but a data format used to descri
 - Bandwidth requirements
 
 **Example SDP snippet:**
+
 ```
 v=0
 o=- 46117317 2 IN IP4 127.0.0.1
@@ -78,6 +86,7 @@ SDP is essential for negotiating and establishing compatible media streams betwe
 ---
 
 ## 🔒 DTLS (Datagram Transport Layer Security)
+
 ✅ **What it is:**
 
 - DTLS is the UDP-compatible version of TLS (used in HTTPS).
@@ -92,6 +101,7 @@ SDP is essential for negotiating and establishing compatible media streams betwe
 ---
 
 ## 🎧 SRTP (Secure Real-time Transport Protocol)
+
 ✅ **What it is:**
 
 - SRTP is a secure version of RTP (Real-time Transport Protocol).
@@ -118,6 +128,46 @@ SDP is essential for negotiating and establishing compatible media streams betwe
 
 - `DTLS` is like a secure handshake between two people to agree on a secret code.
 - `SRTP` is like using that secret code to talk so no one else understands.
+
+---
+
+## 🎥  RTP (Real-time Transport Protocol)
+
+- The Real-time Transport Protocol (RTP), defined in RFC 3550, is an `IETF`(Internet Engineering Task Force) standard protocol to enable real-time connectivity for exchanging data that needs real-time priority.
+
+- ℹ️ Note: WebRTC actually uses SRTP (Secure Real-time Transport Protocol) to ensure that the exchanged data is secure and authenticated as appropriate.
+
+### `Capabilities` of RTP
+
+- RTP's primary benefits in terms of WebRTC include:
+
+  - Generally low latency.
+
+  - Packets are sequence-numbered and timestamped for reassembly if they arrive out of order. This lets data sent using RTP be delivered on transports that don't guarantee ordering or even guarantee delivery at all.
+
+  - This means RTP can be — but is not required to be — used atop UDP for its performance as well as its multiplexing and checksum features.
+
+  - RTP supports multicast; while this isn't yet important for WebRTC, it's likely to matter in the future, when WebRTC is (hopefully) enhanced to support multi-user conversations.
+
+  - RTP isn't limited to use in audiovisual communication. It can be used for any form of continuous or active data transfer, including data streaming, active badges or status display updates, or control and measurement information transport.
+
+### Things RTP `doesn't` do
+
+- RTP itself doesn't provide every possible feature, which is why other protocols are also used by WebRTC. Some of the more noteworthy things RTP doesn't include:
+
+  - RTP does not guarantee `quality-of-service` (QoS).
+
+  - While RTP is intended for use in latency-critical scenarios, it doesn't inherently offer any features that ensure QoS. Instead, it only offers the information necessary to allow QoS to be implemented elsewhere in the stack.
+
+  - RTP doesn't handle allocation or reservation of resources that may be needed.
+
+- Where it matters for WebRTC purposes, these are dealt with in a variety of places within the WebRTC infrastructure. For example, `RTCP`(Real-Time Transport Control Protocol) handles QoS monitoring.
+
+### 📌 RTP is paired with RTCP (RTP Control Protocol) to provide:
+
+- Feedback about network quality (jitter, delay, packet loss)
+
+- Synchronization between audio and video streams
 
 ---
 
