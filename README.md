@@ -186,3 +186,6 @@ WebRTC works in these stages:
 - Once the peer connection is established, the two clients can exchange media (audio, video, data) using the WebRTC protocol. The media is encrypted using DTLS (Datagram Transport Layer Security) and SRTP (Secure Real-time Transport Protocol) to ensure that the media is secure.
 - Then they communicate using RTP and SCTP (Real-time Transport Protocol and Stream Control Transmission Protocol) to exchange media (audio, video, data) between the two clients.
 - The WebRTC protocol is designed to work in real-time, which means that the media is exchanged in real-time between the two clients. This allows for low latency communication between the two clients.
+
+---
+<img src="https://drive.google.com/uc?export=view&id=11M_xCKtXXMc71fZR_j0aPARGE6QvAroM" alt="WebRTC Diagram" width="400">
