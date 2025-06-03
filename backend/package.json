@@ -5,9 +5,9 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-      "dev": "nodemon src/app.js",
-      "start": "node src/app.js",
-      "prod": "pm2 src/app.js"
+        "dev": "nodemon src/app.js",
+        "start": "node src/app.js",
+        "prod": "pm2 src/app.js"
     },
     "repository": {
         "type": "git",
@@ -22,6 +22,8 @@
     "dependencies": {
         "bcrypt": "^6.0.0",
         "cors": "^2.8.5",
+        "dot-env": "^0.0.1",
+        "dotenv": "^16.5.0",
         "express": "^5.1.0",
         "http-status": "^2.1.0",
         "mongoose": "^8.15.1",
