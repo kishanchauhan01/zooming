@@ -188,4 +188,4 @@ WebRTC works in these stages:
 - The WebRTC protocol is designed to work in real-time, which means that the media is exchanged in real-time between the two clients. This allows for low latency communication between the two clients.
 
 ---
-<img src="https://drive.google.com/uc?export=view&id=11M_xCKtXXMc71fZR_j0aPARGE6QvAroM" alt="WebRTC Diagram" width="400">
+<img src="https://drive.google.com/uc?export=view&id=11M_xCKtXXMc71fZR_j0aPARGE6QvAroM" alt="WebRTC Diagram" width="600">
