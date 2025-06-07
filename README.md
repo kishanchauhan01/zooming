@@ -1,191 +1,84 @@
-# 🕸️ Understanding of WebRTC
+# 📹 Zoom Clone
 
-WebRTC (Web Real-Time Communication) is a technology that enables peer-to-peer communication between web browsers and mobile applications. It allows audio, video, and data sharing without the need for an intermediary server.
-
-WebRTC serves multiple purposes; together with the Media Capture and Streams API, they provide powerful multimedia capabilities to the Web, including support for audio and video conferencing, file exchange, screen sharing, identity management, and interfacing with legacy telephone systems including support for sending DTMF (touch-tone dialing) signals. Connections between peers can be made without requiring any special drivers or plug-ins, and can often be made without any intermediary servers.
+A real-time video conferencing application built with the **MERN stack** (MongoDB, Express.js, React, Node.js) and **WebRTC**. This project demonstrates peer-to-peer video, audio, and chat communication in the browser—no plugins required!
 
 ---
 
-# 🌊 Introduction to WebRTC Protocols
+## 🗒️ For more understanding go the the notes section of the repository.
+
+## 🚀 Features
+
+- 🔗 Peer-to-peer video and audio calls
+- 💬 Real-time chat messaging
+- 🖥️ Screen sharing support
+- 🔒 Secure, encrypted connections (DTLS/SRTP)
+- 🌐 NAT/firewall traversal using STUN/TURN servers
 
 ---
 
-## ❄️ ICE (Interactive Connectivity Establishment)
+## 🛠️ Tech Stack
 
-Interactive Connectivity Establishment (ICE) is a framework to allow your web browser to connect with peers. There are many reasons why a straight up connection from Peer A to Peer B won't work. It needs to bypass firewalls that would prevent opening connections, give you a unique address if like most situations your device doesn't have a public IP address, and relay data through a server if your router doesn't allow you to directly connect with peers. ICE uses STUN and/or TURN servers to accomplish this.
-
----
-
-## 🧊 STUN (Session Traversal Utilities for NAT)
-
-Session Traversal Utilities for NAT (STUN) is a protocol to discover your public address and determine any restrictions in your router that would prevent a direct connection with a peer.
-
-The client will send a request to a STUN server on the Internet who will reply with the client's public address and whether or not the client is accessible behind the router's NAT.
-
-<img src="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Protocols/webrtc-stun.png" alt="STUN" width="300">
-
-Here peer A is behind a NAT and wants to connect to peer B. Peer A sends a request to the STUN server, which replies with peer A's public address. Same way peer B sends a request to the STUN server, which replies with peer B's public address. Now both peers can connect to each other using their public addresses.
+- **MongoDB** – Database for user and room management
+- **Express.js** – Backend server and API
+- **React** – Frontend UI
+- **Node.js** – Server runtime
+- **WebRTC** – Real-time communication
+- **Socket.io** – Signaling between peers
 
 ---
 
-## 🌐 NAT (Network Address Translation)
+## 📦 Getting Started
 
-Network Address Translation (NAT) is used to give your device a public IP address. A router will have a public IP address and every device connected to the router will have a private IP address. Requests will be translated from the device's private IP to the router's public IP with a unique port. That way you don't need a unique public IP for each device but can still be discovered on the Internet.
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/yourusername/zoom-clone.git
+   cd zoom-clone
+   ```
 
-Some routers will have restrictions on who can connect to devices on the network. This can mean that even though we have the public IP address found by the STUN server, not anyone can create a connection. In this situation we need to use `TURN`.
+2. **Install dependencies for both client and server:**
+   ```sh
+   cd server
+   npm install
+   cd ../client
+   npm install
+   ```
 
----
+3. **Start the backend server:**
+   ```sh
+   cd ../server
+   npm start
+   ```
 
-## 🔁 TURN (Traversal Using Relays around NAT)
+4. **Start the frontend React app:**
+   ```sh
+   cd ../client
+   npm start
+   ```
 
-Some routers using NAT employ a restriction called 'Symmetric NAT'. This means the router will only accept connections from peers you've previously connected to.
-
-Traversal Using Relays around NAT (TURN) is meant to bypass the Symmetric NAT restriction by opening a connection with a TURN server and relaying all information through that server. You would create a connection with a TURN server and tell all peers to send packets to the server which will then be forwarded to you. This obviously comes with some overhead so it is only used if there are no other alternatives.
-
-<img src="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Protocols/webrtc-turn.png" alt="TURN" width="300">
-
-Here peer A is behind a Symmetric NAT and wants to connect to peer B. Peer A sends a request to the TURN server, which replies with peer A's public address. Same way peer B sends a request to the TURN server, which replies with peer B's public address. Now both peers can connect to each other using their public addresses through the TURN server.
-
----
-
-## 📝 SDP (Session Description Protocol)
-
-Session Description Protocol (SDP) is a standard for describing the multimedia content of the connection such as resolution, formats, codecs, encryption, etc. so that both peers can understand each other once the data is transferring. This is, in essence, the metadata describing the content and not the media content itself.
-
-Technically, then, SDP is not truly a protocol, but a data format used to describe connection that shares media between devices.
-
-**How SDP is used in WebRTC:**  
-
-- When two peers want to establish a WebRTC connection, they exchange SDP messages as part of the offer/answer model.  
-- The "offer" contains information about the media formats and connection parameters supported by the initiating peer.  
-- The "answer" contains the supported formats and parameters from the responding peer.  
-- This negotiation ensures both peers agree on how to send and receive media.
-
-**What SDP describes:**  
-
-- Media types (audio, video, data)
-- Supported codecs (e.g., VP8, H.264 for video; Opus for audio)
-- Network information (IP addresses, ports)
-- Encryption methods and keys
-- Bandwidth requirements
-
-**Example SDP snippet:**
-
-```
-v=0
-o=- 46117317 2 IN IP4 127.0.0.1
-s=-
-t=0 0
-m=audio 49170 RTP/AVP 0
-a=rtpmap:0 PCMU/8000
-```
-
-**Summary:**  
-SDP is essential for negotiating and establishing compatible media streams between peers in WebRTC, but it does not carry the media itself—only the description of how it will be exchanged.
+5. **Open your browser and visit:**
+   ```
+   http://localhost:3000
+   ```
 
 ---
 
-## 🔒 DTLS (Datagram Transport Layer Security)
+## 📝 How It Works
 
-✅ **What it is:**
+1. **Signaling:**  
+   Users join a room. The server (Node.js/Express + Socket.io) helps exchange connection details (SDP, ICE candidates) between peers.
 
-- DTLS is the UDP-compatible version of TLS (used in HTTPS).
-- It provides encryption, authentication, and integrity for data sent over UDP (which WebRTC uses).
+2. **Peer Connection:**  
+   WebRTC establishes a direct connection for media and data.
 
-📦 **Why DTLS in WebRTC?**
-
-- WebRTC uses UDP for faster, low-latency communication.
-- DTLS ensures that even though it's UDP, the communication is still secure and encrypted.
-- It's used to negotiate encryption keys for media channels (which are then passed to SRTP).
+3. **Media Exchange:**  
+   Video, audio, and chat messages are sent directly between users.
 
 ---
 
-## 🎧 SRTP (Secure Real-time Transport Protocol)
+## 📚 Learn More
 
-✅ **What it is:**
-
-- SRTP is a secure version of RTP (Real-time Transport Protocol).
-- It's used for encrypting and authenticating audio/video media streams.
-
-🛡 **What SRTP Does:**
-
-- Encrypts audio and video so that attackers can't listen in.
-- Authenticates packets so that no one can inject or tamper with media.
-- Lightweight and designed for real-time communication (low latency).
+- [WebRTC Official Docs](https://webrtc.org/)
+- [MERN Stack Guide](https://www.mongodb.com/mern-stack)
+- [Socket.io Documentation](https://socket.io/docs/)
 
 ---
-
-## 🔁 How DTLS and SRTP Work Together in WebRTC
-
-🔐 **DTLS-SRTP Flow:**
-
-1. DTLS handshake happens between peers over UDP.
-2. This is like "securely shaking hands" to agree on encryption keys.
-3. These keys are then used to encrypt and decrypt media using SRTP.
-4. Audio/video is transmitted over SRTP, which is fast and secure.
-
-📌 **Real-World Analogy:**
-
-- `DTLS` is like a secure handshake between two people to agree on a secret code.
-- `SRTP` is like using that secret code to talk so no one else understands.
-
----
-
-## 🎥  RTP (Real-time Transport Protocol)
-
-- The Real-time Transport Protocol (RTP), defined in RFC 3550, is an `IETF`(Internet Engineering Task Force) standard protocol to enable real-time connectivity for exchanging data that needs real-time priority.
-
-- ℹ️ Note: WebRTC actually uses SRTP (Secure Real-time Transport Protocol) to ensure that the exchanged data is secure and authenticated as appropriate.
-
-### `Capabilities` of RTP
-
-- RTP's primary benefits in terms of WebRTC include:
-
-  - Generally low latency.
-
-  - Packets are sequence-numbered and timestamped for reassembly if they arrive out of order. This lets data sent using RTP be delivered on transports that don't guarantee ordering or even guarantee delivery at all.
-
-  - This means RTP can be — but is not required to be — used atop UDP for its performance as well as its multiplexing and checksum features.
-
-  - RTP supports multicast; while this isn't yet important for WebRTC, it's likely to matter in the future, when WebRTC is (hopefully) enhanced to support multi-user conversations.
-
-  - RTP isn't limited to use in audiovisual communication. It can be used for any form of continuous or active data transfer, including data streaming, active badges or status display updates, or control and measurement information transport.
-
-### Things RTP `doesn't` do
-
-- RTP itself doesn't provide every possible feature, which is why other protocols are also used by WebRTC. Some of the more noteworthy things RTP doesn't include:
-
-  - RTP does not guarantee `quality-of-service` (QoS).
-
-  - While RTP is intended for use in latency-critical scenarios, it doesn't inherently offer any features that ensure QoS. Instead, it only offers the information necessary to allow QoS to be implemented elsewhere in the stack.
-
-  - RTP doesn't handle allocation or reservation of resources that may be needed.
-
-- Where it matters for WebRTC purposes, these are dealt with in a variety of places within the WebRTC infrastructure. For example, `RTCP`(Real-Time Transport Control Protocol) handles QoS monitoring.
-
-### 📌 RTP is paired with RTCP (RTP Control Protocol) to provide:
-
-- Feedback about network quality (jitter, delay, packet loss)
-
-- Synchronization between audio and video streams
-
----
-
-## ⚡ WebRTC Stages
-
-WebRTC works in these stages:
-
-1. 📨 **Signalling**
-2. 🔗 **Connecting**
-3. 🔒 **Securing**
-4. 📡 **Communicating**
-
-- For example, if two clients want to communicate with each other, they need to exchange some information about themselves. This is done through a signalling server. The signalling server is not part of the WebRTC protocol, but it is used to exchange the information needed to establish a connection between the two clients.
-- The signalling server can be any server that can exchange messages between the two clients. It can be a WebSocket server, a REST API, or any other server that can exchange messages.
-- Once the two clients have exchanged the information needed to establish a connection, they can connect to each other using the WebRTC protocol (ICE-Interactive Connectivity Establishment). This is done by creating a peer connection between the two clients.
-- Once the peer connection is established, the two clients can exchange media (audio, video, data) using the WebRTC protocol. The media is encrypted using DTLS (Datagram Transport Layer Security) and SRTP (Secure Real-time Transport Protocol) to ensure that the media is secure.
-- Then they communicate using RTP and SCTP (Real-time Transport Protocol and Stream Control Transmission Protocol) to exchange media (audio, video, data) between the two clients.
-- The WebRTC protocol is designed to work in real-time, which means that the media is exchanged in real-time between the two clients. This allows for low latency communication between the two clients.
-
----
-<img src="https://drive.google.com/uc?export=view&id=11M_xCKtXXMc71fZR_j0aPARGE6QvAroM" alt="WebRTC Diagram" width="600">

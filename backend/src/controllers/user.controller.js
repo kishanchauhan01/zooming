@@ -41,12 +41,12 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (existedUser) {
-    throw new ApiError(409, "User is already exists");
+    throw new ApiError(httpStatus.FOUND, "User is already exists");
   }
 
   //upload on cloudinary
   const profilePic = await uploadOnCloudinary(req.file.path);
-  console.log(req.file);
+  // console.log(req.file);
 
   if (!profilePic) {
     throw new ApiError(400, "Profile pic is required");

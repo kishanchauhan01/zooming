@@ -1,16 +1,18 @@
 import "./loadEnv.js";
 import connectDB from "./db/index.js";
-import { app } from "./app.js";
+import { server } from "./app.js";
+
+const port = process.env.PORT
 
 connectDB()
   .then(() => {
-    app.on("error", (error) => {
+    server.on("error", (error) => {
       console.log("ERROR before listening: ", error);
       throw error;
     });
 
-    app.listen(process.env.PORT || 3000, () => {
-      console.log(`app is listening on http://localhost:${process.env.PORT}`);
+    server.listen(port || 3000, () => {
+      console.log(`app is listening on http://localhost:${port}`);
     });
   })
   .catch((err) => {

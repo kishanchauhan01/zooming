@@ -7,8 +7,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+
 const uploadOnCloudinary = async (localFilePath) => {
   try {
+    console.log(localFilePath);
     if (!localFilePath) return null;
     //upload local file on cloudinary
 
@@ -21,6 +23,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     return response;
   } catch (error) {
     fs.unlinkSync(localFilePath);
+    console.log("file not uploaded");
     return null;
   }
 };
@@ -30,6 +33,7 @@ const deleteFromCloudinary = async (public_id) => {
     if (!public_id) return null;
 
     const response = await cloudinary.uploader.destroy(public_id, {
+      use_filename: true,
       resource_type: "image",
     });
 
