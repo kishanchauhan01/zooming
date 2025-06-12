@@ -430,7 +430,7 @@ const io = require("socket.io")(3000, {
 Using `app.listen(3000)` will not work here, as it creates a new HTTP server.
 
 - Emit custom events (socket.emit)
-- Listen fro events (socket.on)
+- Listen from events (socket.on)
 - Exchange any data (text, JSON, binary)
 
 ---
